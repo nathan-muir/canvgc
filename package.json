@@ -1,7 +1,7 @@
 {
   "name": "canvgc",
   "description": "A port of canvg & jscanvas, which pareses svg input and outputs js code to reproduce on a canvas.",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "author": "Nathan Muir <ndmuir@gmail.com>",
   "main": "./lib/canvgc.js",
   "bin": {
@@ -12,7 +12,7 @@
     "url": "https://github.com/nathan-muir/canvg-compile.git"
   },
   "dependencies": {
-    "canvas": ">=1.1.0",
+    "canvas": "1.0.x",
     "xmldom": ">=0.1.16",
     "rgbcolor": ">=0.0.3",
     "underscore": ">=1.5.1",
