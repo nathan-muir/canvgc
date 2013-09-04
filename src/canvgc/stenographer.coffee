@@ -36,7 +36,6 @@ class Stenographer
       @images[imageId] = value.toDataUrl('image/png')
       return "#{@propertiesName}.#{imageId}"
     else
-      console.log("Could not serialize value: " + JSON.stringify(value))
       throw new Error("Could not serialize value: "  + JSON.stringify(value))
 
   getBase64Image:(img) ->
@@ -58,8 +57,9 @@ class Stenographer
   setContextProperty: (propertyName, value)->
     @output += "#{@contextName}.#{propertyName} = #{@serialize(value)};\n"
     return
+
   invokeChildObject: (name, fn, args)->
-    @output += "#{name}.#{fn}(#{@serializeArgs(args)});\n"
+    @output += "#{@propertiesName}.#{name}.#{fn}(#{@serializeArgs(args)});\n"
     return
 
   shouldRoundNumbers: (fn)->

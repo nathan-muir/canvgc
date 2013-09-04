@@ -14,6 +14,9 @@ class CanvasRenderingContext2DShim
   ###
   constructor: (@stenographer, @context2d) ->
 
+  get: (name)->
+    return @context2d[name]
+
   set: (name, value)->
     #if @context2d[name] != value
     @stenographer.setContextProperty(name, value)
@@ -23,7 +26,7 @@ class CanvasRenderingContext2DShim
   invoke:(fn, args, assignTarget = null) ->
     # reconcile & output changed properties since last invocation
     @stenographer.invokeContext(fn, args, assignTarget)
-    return @context2d[fn].apply(@context2d, args)
+    return @context2d[fn]?.apply(@context2d, args)
 
   fill:->
     return @invoke("fill", arguments)
@@ -81,15 +84,15 @@ class CanvasRenderingContext2DShim
 
   createLinearGradient:->
     targetId = randomId('lg')
-    linerGradient = @invoke("createLinearGradient", arguments, targetId)
-    linerGradient.targetId = targetId
-    actualAddColorStop = linerGradient.addColorStop
+    linearGradient = @invoke("createLinearGradient", arguments, targetId)
+    linearGradient.targetId = targetId
+    actualAddColorStop = linearGradient.addColorStop
     # override the colorstop function
-    linerGradient.addColorStop = () =>
+    linearGradient.addColorStop = () =>
       @stenographer.invokeChildObject(targetId, "addColorStop", arguments)
       # execute in parent
-      return actualAddColorStop.apply(linerGradient, arguments)
-    return linerGradient
+      return actualAddColorStop.apply(linearGradient, arguments)
+    return linearGradient
 
   createRadialGradient:->
     targetId = randomId('rg')
@@ -131,71 +134,71 @@ class CanvasRenderingContext2DShim
     return @invoke("isPointPath", arguments)
 
   @property 'canvas',
-    get: ()-> @context2d.canvas
+    get: ()-> @get('canvas')
     set: (canvas)-> @set('canvas', canvas)
 
   @property 'fillStyle',
-    get: ()-> @context2d.fillStyle
+    get: ()-> @get('fillStyle')
     set: (fillStyle)-> @set('fillStyle', fillStyle)
 
   @property 'font',
-    get: ()-> @context2d.font
+    get: ()-> @get('font')
     set: (font)-> @set('font', font)
 
   @property 'globalAlpha',
-    get: ()-> @context2d.globalAlpha
+    get: ()-> @get('globalAlpha')
     set: (globalAlpha)-> @set('globalAlpha', globalAlpha)
 
   @property 'globalCompositeOperation',
-    get: ()-> @context2d.globalCompositeOperation
+    get: ()-> @get('globalCompositeOperation')
     set: (globalCompositeOperation)-> @set('globalCompositeOperation', globalCompositeOperation)
 
   @property 'lineCap',
-    get: ()-> @context2d.lineCap
+    get: ()-> @get('lineCap')
     set: (lineCap)-> @set('lineCap', lineCap)
 
   @property 'lineDashOffset',
-    get: ()-> @context2d.lineDashOffset
+    get: ()-> @get('lineDashOffset')
     set: (lineDashOffset)-> @set('lineDashOffset', lineDashOffset)
 
   @property 'lineJoin',
-    get: ()-> @context2d.lineJoin
+    get: ()-> @get('lineJoin')
     set: (lineJoin)-> @set('lineJoin', lineJoin)
 
   @property 'lineWidth',
-    get: ()-> @context2d.lineWidth
+    get: ()-> @get('lineWidth')
     set: (lineWidth)-> @set('lineWidth', lineWidth)
 
   @property 'miterLimit',
-    get: ()-> @context2d.miterLimit
+    get: ()-> @get('miterLimit')
     set: (miterLimit)-> @set('miterLimit', miterLimit)
 
   @property 'shadowBlur',
-    get: ()-> @context2d.shadowBlur
+    get: ()-> @get('shadowBlur')
     set: (shadowBlur)-> @set('shadowBlur', shadowBlur)
 
   @property 'shadowColor',
-    get: ()-> @context2d.shadowColor
+    get: ()-> @get('shadowColor')
     set: (shadowColor)-> @set('shadowColor', shadowColor)
 
   @property 'shadowOffsetX',
-    get: ()-> @context2d.shadowOffsetX
+    get: ()-> @get('shadowOffsetX')
     set: (shadowOffsetX)-> @set('shadowOffsetX', shadowOffsetX)
 
   @property 'shadowOffsetY',
-    get: ()-> @context2d.shadowOffsetY
+    get: ()-> @get('shadowOffsetY')
     set: (shadowOffsetY)-> @set('shadowOffsetY', shadowOffsetY)
 
   @property 'strokeStyle',
-    get: ()-> @context2d.strokeStyle
+    get: ()-> @get('strokeStyle')
     set: (strokeStyle)-> @set('strokeStyle', strokeStyle)
 
   @property 'textAlign',
-    get: ()-> @context2d.textAlign
+    get: ()-> @get('textAlign')
     set: (textAlign)-> @set('textAlign', textAlign)
 
   @property 'textBaseline',
-    get: ()-> @context2d.textBaseline
+    get: ()-> @get('textBaseline')
     set: (textBaseline)-> @set('textBaseline', textBaseline)
 
 
