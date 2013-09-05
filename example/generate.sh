@@ -1,0 +1,2 @@
+./../bin/canvgc simple.svg simple.js --prepend 'if(typeof window.canvgc=="undefined")window.canvgc={};window.canvgc.simple =' --append ';'
+./../bin/canvgc complex.svg complex.js --prepend 'if(typeof window.canvgc=="undefined")window.canvgc={};window.canvgc.complex =' --append ';'

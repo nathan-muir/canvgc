@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>`canvgc` Demo</title>
+</head>
+<body>
+  <canvas id="simple-example" width="300" height="300" style="border: 1px solid"></canvas>
+  <canvas id="complex-example" width="300" height="300" style="border: 1px solid"></canvas>
+  <script src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.4.4/underscore-min.js" type="text/javascript"></script>
+  <script src="simple.js" type="text/javascript"></script>
+  <script src="complex.js" type="text/javascript"></script>
+  <script src="../lib/browser/Painter.js" type="text/javascript"></script>
+  <script type="text/javascript">
+    
+    function render(canvas, plan){
+      var painter = new Painter(plan,function(cb){window.setTimeout(cb,0);});
+      
+      canvas.width = plan.w;
+      canvas.height = plan.h;
+      
+      painter.loadImages(function(){
+        painter.renderImmediately(canvas.getContext('2d'))
+      })
+    }
+    
+    document.addEventListener( "DOMContentLoaded", function(){
+      document.removeEventListener( "DOMContentLoaded", arguments.callee, false );
+      render(document.getElementById('simple-example'), window.canvgc.simple);
+      render(document.getElementById('complex-example'), window.canvgc.complex);
+    });
+  </script>
+</body>
+</html>

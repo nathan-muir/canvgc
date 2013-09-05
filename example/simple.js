@@ -1,0 +1,25 @@
+if(typeof window.canvgc=="undefined")window.canvgc={};window.canvgc.simple ={"w":100,"h":100,"d":[function($,p){
+$.save();
+p.stack++;
+$.strokeStyle = "rgba(0,0,0,0)";
+$.lineCap = "butt";
+$.lineJoin = "miter";
+$.miterLimit = 4;
+$.font = "   10px sans-serif";
+$.translate(0,0);
+$.save();
+p.stack++;
+$.fillStyle = "red";
+$.strokeStyle = "black";
+$.lineWidth = 2;
+$.font = "   10px sans-serif";
+$.beginPath();
+$.arc(50,50,40,0,6.283185307179586,true);
+$.closePath();
+$.fill();
+$.stroke();
+$.restore();
+p.stack--;
+$.restore();
+p.stack--;
+}],"i":{}};
