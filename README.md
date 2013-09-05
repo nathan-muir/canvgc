@@ -10,6 +10,46 @@ canvgc
 ```sh
 npm install canvgc
 ```
+
+## Example
+
+```svg
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100" height="100">
+  <circle cx="50" cy="50" r="40" stroke="black" stroke-width="2" fill="red"/>
+</svg>
+```
+
+```js
+{
+  "w": 100, 
+  "h": 100,
+  "d": [
+    function ($, p) {
+      $.save();
+      p.stack++;
+      $.strokeStyle = "rgba(0,0,0,0)";
+      $.miterLimit = 4;
+      $.font = "   10px sans-serif";
+      $.translate(0,0);
+      $.save();
+      p.stack++;
+      $.fillStyle = "red";
+      $.strokeStyle = "black";
+      $.beginPath();
+      $.arc(50,50,40,0,6.283185307179586,true);
+      $.closePath();
+      $.fill();
+      $.stroke();
+      $.restore();
+      p.stack--;
+      $.restore();
+      p.stack--;
+    }
+  ], 
+  "i": {}
+}
+```
+
 ## Usage (Server Side)
 ```bash
 canvgc file.svg file.js # basic conversion
