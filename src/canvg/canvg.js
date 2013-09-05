@@ -1660,7 +1660,7 @@ function build() {
       var g = this.getGradient(ctx, element);
       if (g == null) return addParentOpacity(stopsContainer.stops[stopsContainer.stops.length - 1].color);
       for (var i = 0; i < stopsContainer.stops.length; i++) {
-        g.addColorStop(stopsContainer.stops[i].offset, addParentOpacity(stopsContainer.stops[i].color));
+        g.addColorStop(stopsContainer.stops[i].offset, addParentOpacity(stopsContainer.stops[i].color || 'black'));
       }
 
       if (this.attribute('gradientTransform').hasValue()) {
@@ -1690,7 +1690,7 @@ function build() {
         var tempCtx = c.getContext('2d');
         tempCtx.fillStyle = g;
         tempSvg.render(tempCtx);
-        return tempCtx.createPattern(c, 'no-repeat');
+        return ctx.createPattern(c, 'no-repeat');
       }
 
       return g;
@@ -2271,16 +2271,20 @@ function build() {
     svg.Images.push(this);
     this.loaded = false;
     if (href.substr(0, 5) === 'data:') {
-
-      var match = href.match(/^data:.+;base64,(.*)$/);
-      var buffer = new Buffer(match[1], 'base64');
+      var base64 = href.replace(/^data:image\/(jpg|png|gif|jpeg);base64,/, "");
+      if (base64.substr(0, 5) === 'data:') {
+        throw new Error("Image with href 'data:' prefix doesn't match a known content type.");
+      }
+      var buffer = new Buffer(base64, 'base64');
 
       this.img = new Canvas.Image();
-      self.img.onload = function(){
-          self.loaded = true;
-        };
+      self.img.onload = function () {
+        self.loaded = true;
+      };
+      self.img.onerror = function () {
+        throw new Error('Failed to load image');
+      };
       this.img.src = buffer;
-
     } else {
 
       if (isSvg) {
@@ -2288,8 +2292,11 @@ function build() {
       }
       svg.remote(href, function (data) {
         self.img = new Canvas.Image();
-        self.img.onload = function(){
+        self.img.onload = function () {
           self.loaded = true;
+        };
+        self.img.onerror = function () {
+          throw new Error('Failed to load image');
         };
         self.img.src = data;
       });
@@ -2520,7 +2527,7 @@ function build() {
       tempCtx.fillStyle = maskCtx.createPattern(cMask, 'no-repeat');
       tempCtx.fillRect(0, 0, x + width, y + height);
 
-      ctx.fillStyle = tempCtx.createPattern(c, 'no-repeat');
+      ctx.fillStyle = ctx.createPattern(c, 'no-repeat');
       ctx.fillRect(0, 0, x + width, y + height);
 
       // reassign mask
@@ -2855,7 +2862,7 @@ function build() {
           svg.Mouse.runEvents(); // run and clear our events
         }
 
-        if (!waitingForImages){
+        if (!waitingForImages) {
           svg.stop()
         }
       }, 1000 / svg.FRAMERATE);
