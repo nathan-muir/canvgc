@@ -18,7 +18,6 @@ class CanvasRenderingContext2DShim
     return @context2d[name]
 
   set: (name, value)->
-    #if @context2d[name] != value
     @stenographer.setContextProperty(name, value)
     @context2d[name] = value
     return
