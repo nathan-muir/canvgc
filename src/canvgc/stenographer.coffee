@@ -31,12 +31,12 @@ class Stenographer
       imageId = randomId('img')
       @images[imageId]  = @getBase64Image(value)
       return "#{@propertiesName}.#{imageId}"
-    else if value?.tagName == "CANVAS"
+    else if value?.tagName == "CANVAS" || value.toString() == '[object Canvas]'
       imageId = randomId('img')
-      @images[imageId] = value.toDataUrl('image/png')
+      @images[imageId] = value.toDataURL('image/png')
       return "#{@propertiesName}.#{imageId}"
     else
-      throw new Error("Could not serialize value: "  + JSON.stringify(value))
+      throw new Error("Could not serialize value: #{value.toString()}")
 
   getBase64Image:(img) ->
     # Create an empty canvas element
