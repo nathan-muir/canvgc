@@ -2804,7 +2804,12 @@ function build() {
       }
       var cWidth = ctx.canvas.clientWidth || ctx.canvas.width;
       var cHeight = ctx.canvas.clientHeight || ctx.canvas.height;
+      var viewBox;
       if (svg.opts['ignoreDimensions'] == true && e.style('width').hasValue() && e.style('height').hasValue()) {
+        if (e.attribute('viewBox').hasValue()){
+          viewBox = svg.ToNumberArray(e.attribute('viewBox').value);
+          svg.ViewPort.SetCurrent(viewBox[2], viewBox[3]);
+        }
         cWidth = e.style('width').toPixels('x');
         cHeight = e.style('height').toPixels('y');
       }
@@ -2815,7 +2820,8 @@ function build() {
       if (svg.opts['offsetX'] != null) e.attribute('x', true).value = svg.opts['offsetX'];
       if (svg.opts['offsetY'] != null) e.attribute('y', true).value = svg.opts['offsetY'];
       if (svg.opts['scaleWidth'] != null && svg.opts['scaleHeight'] != null) {
-        var xRatio = 1, yRatio = 1, viewBox = svg.ToNumberArray(e.attribute('viewBox').value);
+        var xRatio = 1, yRatio = 1;
+        viewBox = svg.ToNumberArray(e.attribute('viewBox').value);
         if (e.attribute('width').hasValue()) xRatio = e.attribute('width').toPixels('x') / svg.opts['scaleWidth'];
         else if (!isNaN(viewBox[2])) xRatio = viewBox[2] / svg.opts['scaleWidth'];
         if (e.attribute('height').hasValue()) yRatio = e.attribute('height').toPixels('y') / svg.opts['scaleHeight'];
