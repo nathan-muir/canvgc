@@ -5,9 +5,9 @@ class Painter
 
   ###
    * @param {Array} renderList
-   * @param {Function} setImmediate
+   * @param {Function} defer
   ###
-  constructor: (@plan, @setImmediate)->
+  constructor: (@plan, @defer)->
     @renderId = 0
     @ready = false
     @renderCtx =
@@ -19,7 +19,7 @@ class Painter
     imageNames = _.keys(@plan.i)
     if imageNames.length == 0
       @ready = true
-      @setImmediate(cb)
+      @defer(cb)
     for name, data of @plan.i
       do (name, data) =>
         img = new Image()
@@ -27,7 +27,7 @@ class Painter
           @renderCtx[name] = img
           if _.every(imageNames, (n)=> @renderCtx[n]?)
             @ready = true
-            @setImmediate(cb)
+            @defer(cb)
           return
         img.src = data
     return
@@ -47,7 +47,7 @@ class Painter
       f(context2d, @renderCtx)
     return
 
-  render: (context2d, cb)->
+  renderDeferred: (context2d, cb)->
     unless @ready
       throw new Error('Painter not yet ready.')
     @rendering = true
@@ -58,7 +58,7 @@ class Painter
       if @renderListPosition < @plan.d.length
         fn = @plan.d[@renderListPosition]
         @renderListPosition += 1
-        @setImmediate ()=>
+        @defer ()=>
           if !@rendering or renderId != @renderId
             console.log('Rendering cancelled for renderId', renderId);
             return
@@ -69,8 +69,10 @@ class Painter
         @renderId = 0
         @renderListPosition = 0
         @rendering = false
-        @setImmediate(cb)
+        @defer(cb)
 
       return
     enqueue(@renderId)
     return
+
+window.Painter = Painter; 
