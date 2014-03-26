@@ -815,17 +815,36 @@ function build() {
 
     this.setContext = function (ctx) {
       // fill
+      var fillStyleValue, fillStyle;
       if (this.style('fill').isUrlDefinition()) {
-        var fs = this.style('fill').getFillStyleDefinition(this, this.style('fill-opacity'));
-        if (fs != null) ctx.fillStyle = fs;
+        fillStyleValue = this.style('fill').getFillStyleDefinition(this, this.style('fill-opacity'));
+        if (fillStyleValue != null){
+          if (this.style('fill-opacity').hasValue()){
+            fillStyle = new svg.Property('fill', fillStyleValue);
+            fillStyle = fillStyle.addOpacity(this.style('fill-opacity').value);
+            fillStyleValue = fillStyle.value;
+          }
+        } else if (this.style('fill-opacity').hasValue()) {
+          fillStyle = new svg.Property('fill', ctx.fillStyle);
+          fillStyle = fillStyle.addOpacity(this.style('fill-opacity').value);
+          fillStyleValue = fillStyle.value;
+        }
+        if (fillStyleValue != null){
+          ctx.fillStyle = fillStyleValue;
+        }
       }
       else if (this.style('fill').hasValue()) {
-        var fillStyle = this.style('fill');
+        fillStyle = this.style('fill');
         if (fillStyle.value == 'currentColor') fillStyle.value = this.style('color').value;
-        ctx.fillStyle = (fillStyle.value == 'none' ? 'rgba(0,0,0,0)' : fillStyle.value);
-      }
-      if (this.style('fill-opacity').hasValue()) {
-        var fillStyle = new svg.Property('fill', ctx.fillStyle);
+        fillStyleValue = (fillStyle.value == 'none' ? 'rgba(0,0,0,0)' : fillStyle.value);
+        if (this.style('fill-opacity').hasValue()){
+          fillStyle = new svg.Property('fill', fillStyleValue);
+          fillStyle = fillStyle.addOpacity(this.style('fill-opacity').value);
+          fillStyleValue = fillStyle.value;
+        }
+        ctx.fillStyle = fillStyleValue;
+      } else if (this.style('fill-opacity').hasValue()) {
+        fillStyle = new svg.Property('fill', ctx.fillStyle);
         fillStyle = fillStyle.addOpacity(this.style('fill-opacity').value);
         ctx.fillStyle = fillStyle.value;
       }

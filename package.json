@@ -12,7 +12,7 @@
     "url": "https://github.com/nathan-muir/canvg-compile.git"
   },
   "dependencies": {
-    "canvas": "1.0.x",
+    "canvas": "1.1.x",
     "xmldom": ">=0.1.16",
     "rgbcolor": ">=0.0.3",
     "underscore": ">=1.5.1",
