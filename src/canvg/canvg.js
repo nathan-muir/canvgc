@@ -1676,12 +1676,6 @@ function build() {
         return color;
       };
 
-      var g = this.getGradient(ctx, element);
-      if (g == null) return addParentOpacity(stopsContainer.stops[stopsContainer.stops.length - 1].color);
-      for (var i = 0; i < stopsContainer.stops.length; i++) {
-        g.addColorStop(stopsContainer.stops[i].offset, addParentOpacity(stopsContainer.stops[i].color || 'black'));
-      }
-
       if (this.attribute('gradientTransform').hasValue()) {
         // render as transformed pattern on temporary canvas
         var rootView = svg.ViewPort.viewPorts[0];
@@ -1707,6 +1701,11 @@ function build() {
         c.width = rootView.width;
         c.height = rootView.height;
         var tempCtx = c.getContext('2d');
+        var g = this.getGradient(tempCtx, element);
+        if (g == null) return addParentOpacity(stopsContainer.stops[stopsContainer.stops.length - 1].color);
+        for (var i = 0; i < stopsContainer.stops.length; i++) {
+          g.addColorStop(stopsContainer.stops[i].offset, addParentOpacity(stopsContainer.stops[i].color || 'black'));
+        }
         tempCtx.fillStyle = g;
         tempSvg.render(tempCtx);
         return ctx.createPattern(c, 'no-repeat');
